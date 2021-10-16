@@ -44,27 +44,30 @@ function volumeCreditsFor(aPerformance) {
     return result;
 }
 
+function usd(aNumber) {
+    return new Intl.NumberFormat(
+        'en-US',
+        { style: 'currency', currency: 'USD', minimumFractionDigits: 2 },
+    ).format(aNumber);
+}
+
 function statement(invoices, plays) {
     let totalAmount = 0;
     let volumeCredits = 0;
 
     let result = `Statement for ${invoices.customer}\n`;
-    const format = new Intl.NumberFormat(
-        'en-US',
-        { style: 'currency', currency: 'USD', minimumFractionDigits: 2 },
-    ).format;
 
     for (let perf of invoices.performances) {
         let thisAmount = amountFor(perf, playFor(perf));
 
         volumeCredits += volumeCreditsFor(perf);
 
-        result += ` ${playFor(perf).name}: ${format(thisAmount / 100)}`;
+        result += ` ${playFor(perf).name}: ${usd(thisAmount / 100)}`;
         result += ` (${perf.audience} seats)\n`;
         totalAmount += thisAmount;
     }
 
-    result += `Amount owned is ${format(totalAmount/100)}\n`;
+    result += `Amount owned is ${usd(totalAmount/100)}\n`;
     result += `You earned ${volumeCredits} credits\n`;
     return result;
 } 
