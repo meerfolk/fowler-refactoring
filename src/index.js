@@ -2,6 +2,10 @@ const { equal } = require('assert');
 const plays = require('../data/plays.json');
 const invoices = require('../data/invoices.json');
 
+function playFor(perf) {
+    return plays[perf.playID];
+}
+
 function amountFor(aPerformance, play) {
     let result = 0;
 
@@ -14,7 +18,7 @@ function amountFor(aPerformance, play) {
             }
 
             break;
-        
+
         case 'comedy':
             result = 30000;
 
@@ -24,7 +28,7 @@ function amountFor(aPerformance, play) {
 
             result += 300 * aPerformance.audience;
             break;
-        
+
         default:
             throw new Error(`unknown type: ${play.type}`);
     }
@@ -43,14 +47,13 @@ function statement(invoices, plays) {
     ).format;
 
     for (let perf of invoices.performances) {
-        const play = plays[perf.playID];
-        let thisAmount = amountFor(perf, play);
+        let thisAmount = amountFor(perf, playFor(perf));
 
         volumeCredits += Math.max(perf.audience - 30, 0);
 
-        if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
+        if ('comedy' === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
 
-        result += ` ${play.name}: ${format(thisAmount / 100)}`;
+        result += ` ${playFor(perf).name}: ${format(thisAmount / 100)}`;
         result += ` (${perf.audience} seats)\n`;
         totalAmount += thisAmount;
     }
