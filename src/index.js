@@ -51,10 +51,10 @@ function usd(aNumber) {
     ).format(aNumber / 100);
 }
 
-function totalVolumeCredits(invoices) {
+function totalVolumeCredits(performances) {
     let result = 0;
 
-    for (let perf of invoices.performances) {
+    for (let perf of performances) {
         result += perf.volumeCredits;
     }
 
@@ -80,7 +80,7 @@ function renderPlainText(data) {
     }
 
     result += `Amount owned is ${usd(data.totalAmount)}\n`;
-    result += `You earned ${totalVolumeCredits(data)} credits\n`;
+    result += `You earned ${data.totalVolumeCredits} credits\n`;
 
     return result;
 }
@@ -102,6 +102,7 @@ function statement(invoices) {
     }
 
     statementData.totalAmount = totalAmount(statementData.performances);
+    statementData.totalVolumeCredits = totalVolumeCredits(statementData.performances);
 
     return renderPlainText(statementData);
 } 
