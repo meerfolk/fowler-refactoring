@@ -61,10 +61,10 @@ function totalVolumeCredits(invoices) {
     return result;
 }
 
-function totalAmount(invoices) {
+function totalAmount(performances) {
     let totalAmount = 0
 
-    for (let perf of invoices.performances) {
+    for (let perf of performances) {
         totalAmount += perf.amount;
     }
 
@@ -79,7 +79,7 @@ function renderPlainText(data) {
         result += ` (${perf.audience} seats)\n`;
     }
 
-    result += `Amount owned is ${usd(totalAmount(data))}\n`;
+    result += `Amount owned is ${usd(data.totalAmount)}\n`;
     result += `You earned ${totalVolumeCredits(data)} credits\n`;
 
     return result;
@@ -100,6 +100,8 @@ function statement(invoices) {
         performances: invoices.performances.map(enrichPerformance),
         customer: invoices.customer,
     }
+
+    statementData.totalAmount = totalAmount(statementData.performances);
 
     return renderPlainText(statementData);
 } 
