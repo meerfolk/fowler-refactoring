@@ -89,7 +89,7 @@ function enrichPerformance(aPerformance) {
     return result;
 }
 
-function statement(invoices) {
+function createStatementData(invoices) {
     const statementData = {
         performances: invoices.performances.map(enrichPerformance),
         customer: invoices.customer,
@@ -98,7 +98,11 @@ function statement(invoices) {
     statementData.totalAmount = totalAmount(statementData.performances);
     statementData.totalVolumeCredits = totalVolumeCredits(statementData.performances);
 
-    return renderPlainText(statementData);
+    return statementData;
+}
+
+function statement(invoices) {
+    return renderPlainText(createStatementData(invoices));
 } 
 
 const result = statement(invoices);
