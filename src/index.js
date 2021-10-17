@@ -71,17 +71,27 @@ function totalAmount(invoices) {
     return totalAmount;
 }
 
-function statement(invoices) {
-    let result = `Statement for ${invoices.customer}\n`;
+function renderPlainText(data) {
+    let result = `Statement for ${data.customer}\n`;
 
-    for (let perf of invoices.performances) {
+    for (let perf of data.performances) {
         result += ` ${playFor(perf).name}: ${usd(amountFor(perf))}`;
         result += ` (${perf.audience} seats)\n`;
     }
 
-    result += `Amount owned is ${usd(totalAmount(invoices))}\n`;
-    result += `You earned ${totalVolumeCredits(invoices)} credits\n`;
+    result += `Amount owned is ${usd(totalAmount(data))}\n`;
+    result += `You earned ${totalVolumeCredits(data)} credits\n`;
+
     return result;
+}
+
+function statement(invoices) {
+    const statementData = {
+        performances: invoices.performances,
+        customer: invoices.customer,
+    }
+
+    return renderPlainText(statementData);
 } 
 
 const result = statement(invoices);
