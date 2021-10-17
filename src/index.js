@@ -9,7 +9,7 @@ function playFor(perf) {
 function amountFor(aPerformance) {
     let result = 0;
 
-    switch (playFor(aPerformance).type) {
+    switch (aPerformance.play.type) {
         case 'tragedy':
             result = 40000;
 
@@ -30,7 +30,7 @@ function amountFor(aPerformance) {
             break;
 
         default:
-            throw new Error(`unknown type: ${playFor(aPerformance).type}`);
+            throw new Error(`unknown type: ${aPerformance.play.type}`);
     }
 
     return result;
@@ -39,7 +39,7 @@ function amountFor(aPerformance) {
 function volumeCreditsFor(aPerformance) {
     let result = Math.max(aPerformance.audience - 30, 0);
 
-    if ('comedy' === playFor(aPerformance).type) result += Math.floor(aPerformance.audience / 5);
+    if ('comedy' === aPerformance.play.type) result += Math.floor(aPerformance.audience / 5);
 
     return result;
 }
@@ -55,7 +55,7 @@ function totalVolumeCredits(invoices) {
     let result = 0;
 
     for (let perf of invoices.performances) {
-        result += volumeCreditsFor(perf);
+        result += perf.volumeCredits;
     }
 
     return result;
@@ -65,7 +65,7 @@ function totalAmount(invoices) {
     let totalAmount = 0
 
     for (let perf of invoices.performances) {
-        totalAmount += amountFor(perf);
+        totalAmount += perf.amount;
     }
 
     return totalAmount;
@@ -75,7 +75,7 @@ function renderPlainText(data) {
     let result = `Statement for ${data.customer}\n`;
 
     for (let perf of data.performances) {
-        result += ` ${playFor(perf).name}: ${usd(amountFor(perf))}`;
+        result += ` ${perf.play.name}: ${usd(perf.amount)}`;
         result += ` (${perf.audience} seats)\n`;
     }
 
@@ -85,9 +85,19 @@ function renderPlainText(data) {
     return result;
 }
 
+function enrichPerformance(aPerformance) {
+    const result = Object.assign({}, aPerformance);
+
+    result.play = playFor(result);
+    result.amount = amountFor(result);
+    result.volumeCredits = volumeCreditsFor(result);
+
+    return result;
+}
+
 function statement(invoices) {
     const statementData = {
-        performances: invoices.performances,
+        performances: invoices.performances.map(enrichPerformance),
         customer: invoices.customer,
     }
 
