@@ -51,28 +51,36 @@ function usd(aNumber) {
     ).format(aNumber);
 }
 
-function statement(invoices, plays) {
+function totalVolumeCredits(invoices) {
+    let result = 0;
+
+    for (let perf of invoices.performances) {
+        result += volumeCreditsFor(perf);
+    }
+
+    return result;
+}
+
+function statement(invoices) {
     let totalAmount = 0;
-    let volumeCredits = 0;
 
     let result = `Statement for ${invoices.customer}\n`;
 
     for (let perf of invoices.performances) {
         let thisAmount = amountFor(perf, playFor(perf));
 
-        volumeCredits += volumeCreditsFor(perf);
-
         result += ` ${playFor(perf).name}: ${usd(thisAmount / 100)}`;
         result += ` (${perf.audience} seats)\n`;
+
         totalAmount += thisAmount;
     }
 
     result += `Amount owned is ${usd(totalAmount/100)}\n`;
-    result += `You earned ${volumeCredits} credits\n`;
+    result += `You earned ${totalVolumeCredits(invoices)} credits\n`;
     return result;
 } 
 
-const result = statement(invoices, plays);
+const result = statement(invoices);
 
 equal(result, `Statement for BigCo
  Hamlet: $650.00 (55 seats)
