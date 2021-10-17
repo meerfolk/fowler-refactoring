@@ -52,23 +52,17 @@ function usd(aNumber) {
 }
 
 function totalVolumeCredits(performances) {
-    let result = 0;
-
-    for (let perf of performances) {
-        result += perf.volumeCredits;
-    }
-
-    return result;
+    return performances.reduce(
+        (total, performance) => total + performance.volumeCredits,
+        0,
+    );
 }
 
 function totalAmount(performances) {
-    let totalAmount = 0
-
-    for (let perf of performances) {
-        totalAmount += perf.amount;
-    }
-
-    return totalAmount;
+    return performances.reduce(
+        (total, performance) => total + performance.amount,
+        0,
+    );
 }
 
 function renderPlainText(data) {
