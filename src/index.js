@@ -6,10 +6,10 @@ function playFor(perf) {
     return plays[perf.playID];
 }
 
-function amountFor(aPerformance, play) {
+function amountFor(aPerformance) {
     let result = 0;
 
-    switch (play.type) {
+    switch (playFor(aPerformance).type) {
         case 'tragedy':
             result = 40000;
 
@@ -30,7 +30,7 @@ function amountFor(aPerformance, play) {
             break;
 
         default:
-            throw new Error(`unknown type: ${play.type}`);
+            throw new Error(`unknown type: ${playFor(aPerformance).type}`);
     }
 
     return result;
@@ -65,7 +65,7 @@ function totalAmount(invoices) {
     let totalAmount = 0
 
     for (let perf of invoices.performances) {
-        totalAmount += amountFor(perf, playFor(perf));
+        totalAmount += amountFor(perf);
     }
 
     return totalAmount;
@@ -75,7 +75,7 @@ function statement(invoices) {
     let result = `Statement for ${invoices.customer}\n`;
 
     for (let perf of invoices.performances) {
-        result += ` ${playFor(perf).name}: ${usd(amountFor(perf, playFor(perf)))}`;
+        result += ` ${playFor(perf).name}: ${usd(amountFor(perf))}`;
         result += ` (${perf.audience} seats)\n`;
     }
 
