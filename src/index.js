@@ -48,7 +48,7 @@ function usd(aNumber) {
     return new Intl.NumberFormat(
         'en-US',
         { style: 'currency', currency: 'USD', minimumFractionDigits: 2 },
-    ).format(aNumber);
+    ).format(aNumber / 100);
 }
 
 function totalVolumeCredits(invoices) {
@@ -75,11 +75,11 @@ function statement(invoices) {
     let result = `Statement for ${invoices.customer}\n`;
 
     for (let perf of invoices.performances) {
-        result += ` ${playFor(perf).name}: ${usd(amountFor(perf, playFor(perf))/ 100)}`;
+        result += ` ${playFor(perf).name}: ${usd(amountFor(perf, playFor(perf)))}`;
         result += ` (${perf.audience} seats)\n`;
     }
 
-    result += `Amount owned is ${usd(totalAmount(invoices)/100)}\n`;
+    result += `Amount owned is ${usd(totalAmount(invoices))}\n`;
     result += `You earned ${totalVolumeCredits(invoices)} credits\n`;
     return result;
 } 
