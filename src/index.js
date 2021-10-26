@@ -1,5 +1,5 @@
-const { describe, it } = require('mocha');
-const { assert } = require('chai');
+const { describe, it, beforeEach } = require('mocha');
+const { expect } = require('chai');
 class Producer {
     constructor(aProvince, data) {
         this._province = aProvince;
@@ -123,9 +123,17 @@ function sampleProvinceData() {
     }
 }
 
-describe('province', function () {
+describe('province', function() {
+    let asia;
+
+    beforeEach(function() {
+        asia = new Province(sampleProvinceData());
+    })
+
     it('shortfall', function() {
-        const asia = new Province(sampleProvinceData());
-        assert.equal(asia.shortfall, 5)
+        expect(asia.shortfall).equal(5);
     });
+    it('profit', function() {
+        expect(asia.profit).equal(230);
+    })
 });
