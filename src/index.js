@@ -1,3 +1,5 @@
+const { describe, it } = require('mocha');
+const { assert } = require('chai');
 class Producer {
     constructor(aProvince, data) {
         this._province = aProvince;
@@ -120,3 +122,10 @@ function sampleProvinceData() {
         price: 20
     }
 }
+
+describe('province', function () {
+    it('shortfall', function() {
+        const asia = new Province(sampleProvinceData());
+        assert.equal(asia.shortfall, 5)
+    });
+});
